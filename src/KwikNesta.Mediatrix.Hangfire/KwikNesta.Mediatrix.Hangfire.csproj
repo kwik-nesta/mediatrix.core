@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<PackageId>KwikNesta.Mediatrix.Hangfire</PackageId>
+		<Company>Kwik Nesta Inc.</Company>
+		<Version>1.0.0</Version>
+		<Authors>Ojo Toba R.</Authors>
+		<Description>Lightweight mediator for .NET without dependencies, enabling clean architecture and in-process message dispatching.</Description>
+		<RepositoryUrl>https://github.com/kwik-nesta/mediatrix.core</RepositoryUrl>
+		<PackageTags>mediator cqrs clean-architecture dotnet lightweight hangfire</PackageTags>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+	</PropertyGroup>
+	<ItemGroup>
+		<None Include="../../README.md" Pack="true" PackagePath="" />
+	</ItemGroup>
+	<ItemGroup>
+	  <PackageReference Include="Hangfire.AspNetCore" Version="1.8.21" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\KwikNesta.Mediatrix.Core\KwikNesta.Mediatrix.Core.csproj" />
+	</ItemGroup>
+</Project>

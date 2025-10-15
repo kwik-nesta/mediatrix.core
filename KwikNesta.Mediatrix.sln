@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{8251A9BA-F886-46A3-8424-B8D0ABC017DA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KwikNesta.Mediatrix.Core", "src\KwikNesta.Mediatrix.Core\KwikNesta.Mediatrix.Core.csproj", "{9E9FB17A-6321-48C3-8806-F24C26DC48EF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KwikNesta.Mediatrix.Hangfire", "src\KwikNesta.Mediatrix.Hangfire\KwikNesta.Mediatrix.Hangfire.csproj", "{C11BF734-A982-4A83-8677-544DFF9E5A06}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9E9FB17A-6321-48C3-8806-F24C26DC48EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E9FB17A-6321-48C3-8806-F24C26DC48EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E9FB17A-6321-48C3-8806-F24C26DC48EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E9FB17A-6321-48C3-8806-F24C26DC48EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C11BF734-A982-4A83-8677-544DFF9E5A06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C11BF734-A982-4A83-8677-544DFF9E5A06}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C11BF734-A982-4A83-8677-544DFF9E5A06}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C11BF734-A982-4A83-8677-544DFF9E5A06}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9E9FB17A-6321-48C3-8806-F24C26DC48EF} = {8251A9BA-F886-46A3-8424-B8D0ABC017DA}
+		{C11BF734-A982-4A83-8677-544DFF9E5A06} = {8251A9BA-F886-46A3-8424-B8D0ABC017DA}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8CB8A3FC-107C-4FBA-ACFF-8299D4DB8E4F}
+	EndGlobalSection
+EndGlobal
