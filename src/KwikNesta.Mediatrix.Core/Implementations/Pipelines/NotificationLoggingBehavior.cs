@@ -1,6 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using KwikNesta.Mediatrix.Core.Abstractions;
+using Microsoft.Extensions.Logging;
 
-namespace KwikNesta.Mediatrix.Core
+namespace KwikNesta.Mediatrix.Core.Implementations.Pipelines
 {
     public class NotificationLoggingBehavior<TNotification> : IKwikNotificationBehavior<TNotification>
         where TNotification : IKwikNotification
