@@ -1,8 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Concurrent;
 using System.Linq.Expressions;
+using KwikNesta.Mediatrix.Core.Abstractions;
+using KwikNesta.Mediatrix.Core.Internal;
 
-namespace KwikNesta.Mediatrix.Core
+namespace KwikNesta.Mediatrix.Core.Implementations
 {
     public class KwikMediator : IKwikMediator
     {
@@ -28,7 +30,7 @@ namespace KwikNesta.Mediatrix.Core
                 var notificationParam = Expression.Parameter(typeof(object), "notification");
                 var tokenParam = Expression.Parameter(typeof(CancellationToken), "token");
 
-                var method = type.GetMethod("Handle")!;
+                var method = type.GetMethod("HandleAsync")!;
                 var notificationType = type.GetGenericArguments()[0];
 
                 var castHandler = Expression.Convert(handlerParam, type);
@@ -50,7 +52,7 @@ namespace KwikNesta.Mediatrix.Core
             {
                 if (index < behaviors.Count)
                 {
-                    await behaviors[index++].Handle(notification, cancellationToken, Next).ConfigureAwait(false);
+                    await behaviors[index++].HandleAsync(notification, cancellationToken, Next).ConfigureAwait(false);
                 }
                 else
                 {
@@ -63,54 +65,46 @@ namespace KwikNesta.Mediatrix.Core
 
         }
 
-        public async Task<TResponse> SendAsync<TResponse>(IKwikRequest<TResponse> request, CancellationToken cancellationToken = default)
+        public async Task<TResponse> SendAsync<TResponse>(IKwikRequest<TResponse> request, 
+                                                          CancellationToken cancellationToken = default)
         {
-            if (request == null) throw new ArgumentNullException(nameof(request));
-
-            var handlerInterface = typeof(IKwikRequestHandler<,>).MakeGenericType(request.GetType(), typeof(TResponse));
-            var handler = _provider.GetService(handlerInterface)
-                ?? throw new InvalidOperationException($"No handler registered for {handlerInterface.Name}");
-
-            var executor = _requestHandlerCache.GetOrAdd(handlerInterface, static type =>
+            if (request != null)
             {
-                var handlerParam = Expression.Parameter(typeof(object), "handler");
-                var requestParam = Expression.Parameter(typeof(object), "request");
-                var tokenParam = Expression.Parameter(typeof(CancellationToken), "token");
+                var handlerInterface = typeof(IKwikRequestHandler<,>)
+                    .MakeGenericType(request.GetType(), typeof(TResponse));
 
-                var method = type.GetMethod("Handle")!;
-                var requestType = type.GetGenericArguments()[0];
-                var responseType = type.GetGenericArguments()[1];
+                var handler = _provider.GetService(handlerInterface)
+                    ?? throw new InvalidOperationException($"No handler registered for {handlerInterface.Name}");
 
-                var castHandler = Expression.Convert(handlerParam, type);
-                var castRequest = Expression.Convert(requestParam, requestType);
+                var executor = _requestHandlerCache.GetOrAdd(handlerInterface,
+                    static type => HandlerExecutorBuilder.Build(type));
 
-                var call = Expression.Call(castHandler, method, castRequest, tokenParam);
+                var behaviors = GetPipelineBehaviors(request, typeof(TResponse));
+                var index = 0;
 
-                var lambda = Expression.Lambda<Func<object, object, CancellationToken, Task<object>>>(
-                    Expression.Convert(call, typeof(object)),
-                    handlerParam, requestParam, tokenParam);
-
-                return lambda.Compile();
-            });
-
-            var behaviors = GetPipelineBehaviors(request, typeof(TResponse));
-            var index = 0;
-
-            async Task<TResponse> Next()
-            {
-                if (index < behaviors.Count)
+                async Task<TResponse> Next()
                 {
-                    var behavior = behaviors[index++];
-                    var method = behavior.GetType().GetMethod("Handle")!;
-                    return await (Task<TResponse>)method.Invoke(behavior, new object[] { request, cancellationToken, (Func<Task<TResponse>>)Next })!;
+                    if (index < behaviors.Count)
+                    {
+                        var behavior = behaviors[index++];
+                        var method = behavior.GetType().GetMethod("HandleAsync")!;
+                        return await (Task<TResponse>)method.Invoke(behavior, new object[]
+                        {
+                            request,
+                            cancellationToken,
+                            (Func<Task<TResponse>>)Next
+                        })!;
+                    }
+                    else
+                    {
+                        return (TResponse)await executor(handler, request!, cancellationToken);
+                    }
                 }
-                else
-                {
-                    return (TResponse)await executor(handler, request!, cancellationToken);
-                }
+
+                return await Next();
             }
 
-            return await Next();
+            throw new ArgumentNullException(nameof(request));
         }
 
         #region Private methods

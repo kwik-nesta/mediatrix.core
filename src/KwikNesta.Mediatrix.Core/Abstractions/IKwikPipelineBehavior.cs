@@ -1,4 +1,4 @@
-﻿namespace KwikNesta.Mediatrix.Core
+﻿namespace KwikNesta.Mediatrix.Core.Abstractions
 {
     public interface IKwikPipelineBehavior<TRequest, TResponse>
     {
