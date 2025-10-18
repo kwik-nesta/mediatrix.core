@@ -11,9 +11,10 @@ namespace KwikNesta.Mediatrix.Hangfire.Extensions
         /// </summary>
         /// <param name="services"></param>
         /// <returns></returns>
-        public static IServiceCollection AddKwikBackgroundMediators(this IServiceCollection services)
+        public static IServiceCollection AddKwikBackgroundMediators(this IServiceCollection services,
+                                                                    bool useSingleton = false)
         {
-            services.AddSingleton<IKwikBackgroundMediator, KwikBackgroundMediator>();
+            services.AddScoped<IKwikBackgroundMediator, KwikBackgroundMediator>();
             return services;
         }
     }
