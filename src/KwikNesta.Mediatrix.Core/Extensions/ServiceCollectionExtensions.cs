@@ -18,8 +18,7 @@ namespace KwikNesta.Mediatrix.Core.Extensions
         public static IServiceCollection AddKwikMediators(this IServiceCollection services,
                                                           params Assembly[] assemblies)
         {
-            services.AddSingleton<IKwikMediator, KwikMediator>();
-
+            services.AddScoped<IKwikMediator, KwikMediator>();
             if (assemblies == null || assemblies.Length == 0)
             {
                 assemblies = AppDomain.CurrentDomain.GetAssemblies();
